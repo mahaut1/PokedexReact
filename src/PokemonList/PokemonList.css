@@ -1,0 +1,13 @@
+.pokemon-card{
+    display: flex;
+    border: 1px solid black;
+    border-radius: 10px;
+    width:150px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.Pokemonitems{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}

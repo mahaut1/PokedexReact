@@ -1,0 +1,8 @@
+.pokemoncard{
+    display: flex;
+    border: 1px solid black;
+    border-radius: 10px;
+    width:150px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
