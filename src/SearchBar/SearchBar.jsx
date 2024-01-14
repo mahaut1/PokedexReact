@@ -1,15 +1,16 @@
 import React from 'react';
+import TextField from '@mui/material/TextField';
 
 const SearchBar = ({ searchTerm, onSearchChange }) => {
   const handleSearchChange = (event) => {
-    console.log('Search term:', event.target.value);
     onSearchChange(event.target.value);
   };
 
   return (
-    <input
-      type="text"
-      placeholder="Search Pokemon..."
+    <TextField
+      label="Search Pokemon"
+      variant="outlined"
+      fullWidth
       value={searchTerm}
       onChange={handleSearchChange}
     />

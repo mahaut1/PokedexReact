@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './PokemonDetails.css';
-import {
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip
-} from '@mui/material';
+import { Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, Card, CardContent, CardMedia } from '@mui/material';
 
 const PokemonDetails = ({ filteredPokemon, selectedLanguage, types, pokemons }) => {
   const { id } = useParams();
@@ -22,7 +11,6 @@ const PokemonDetails = ({ filteredPokemon, selectedLanguage, types, pokemons }) 
   const [typesData, setTypesData] = useState(null);
 
   useEffect(() => {
-    // Fetch pour récupérer les données de traduction des types
     fetch("https://pokedex-jgabriele.vercel.app/types.json")
       .then((response) => response.json())
       .then((data) => {
@@ -42,6 +30,7 @@ const PokemonDetails = ({ filteredPokemon, selectedLanguage, types, pokemons }) 
         console.log('Pokemon Data:', data);
         const foundPokemon = data.find(p => p.id === parseInt(id));
         if (foundPokemon) {
+          console.log('Found Pokemon:', foundPokemon);
           setPokemon(foundPokemon);
           setIsLoading(false);
         } else {
@@ -71,26 +60,39 @@ const PokemonDetails = ({ filteredPokemon, selectedLanguage, types, pokemons }) 
     return <div>Pokemon not found</div>;
   }
 
-  const { name, weight, height, image, moves } = pokemon;
+  const { name, weight, height, image, moves, types: pokemonTypes, names } = pokemon;
 
-  const translatedTypes = types && types.map(type => (
-    <Chip
+  const translatedTypes = pokemonTypes && pokemonTypes.map(type => (
+    <Button
       key={type}
-      label={typesData && typesData[type] ? typesData[type].translations[selectedLanguage] : type}
-      style={{ backgroundColor: typesData && typesData[type] ? typesData[type].backgroundColor : '#000', marginRight: 5 }}
-    />
+      variant="contained"
+      style={{
+        backgroundColor: typesData && typesData[type] ? typesData[type].backgroundColor : '#FFF',
+        marginRight: 5,
+        marginBottom: 5,
+      }}
+    >
+      {typesData && typesData[type] && (
+        <>
+          <span style={{ marginRight: 5 }}>
+            {typesData[type].translations[selectedLanguage]}
+          </span>
+          <span>({type})</span>
+        </>
+      )}
+    </Button>
   ));
+  
 
   return (
     <Card className="pokemon-card-container">
       <CardContent className="pokemon-card-details">
-        <Typography variant="h4" component="div">Pokemon Details</Typography>
+      <Typography variant="h4" component="div">{names && names[selectedLanguage] || name}</Typography>  
         <CardMedia component="img" height="140" image={image} alt={name} />
         <Typography>ID: {id}</Typography>
-        <Typography>Name: {pokemon.names[selectedLanguage]}</Typography>
+        <Typography>Name: {names && names[selectedLanguage] || name}</Typography>    
         <Typography>Weight: {weight}</Typography>
         <Typography>Height: {height}</Typography>
-        {/* Afficher les types traduits en utilisant les Chips */}
         <div>
           <Typography>Types:</Typography>
           {translatedTypes}

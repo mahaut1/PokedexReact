@@ -5,46 +5,46 @@ import SearchBar from '../SearchBar/SearchBar';
 import PokemonDetails from '../PokemonDetails/PokemonDetails';
 
 const PokemonListPage = ({ selectedLanguage }) => {
-    const [allPokemons, setAllPokemons] = useState([]);
+  const [allPokemons, setAllPokemons] = useState([]);
   const [rows, setRows] = useState([]);
   const [types, setTypes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
   const [isLoadingPokemons, setIsLoadingPokemons] = useState(true);
   const [isLoadingTypes, setIsLoadingTypes] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("https://pokedex-jgabriele.vercel.app/pokemons.json")
-      .then((data) => data.json())
-      .then((json) => {
-        setAllPokemons(json || []);
-        setRows(json || []);
-        setIsLoadingPokemons(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching pokemon data:", error);
-        setIsLoadingPokemons(false);
-        setError("Error fetching pokemon data");
-      });
+    const fetchData = async () => {
+      try {
+        const [typesResponse, pokemonsResponse] = await Promise.all([
+          fetch("https://pokedex-jgabriele.vercel.app/types.json").then(response => response.json()),
+          fetch("https://pokedex-jgabriele.vercel.app/pokemons.json").then(response => response.json())
+        ]);
 
-    fetch("https://pokedex-jgabriele.vercel.app/types.json")
-      .then((response) => response.json())
-      .then((data) => {
-        setTypes(data[selectedLanguage] || []);
+        setTypes(typesResponse[selectedLanguage] || []);
+        setAllPokemons(pokemonsResponse || []);
+        setRows(pokemonsResponse || []);
         setIsLoadingTypes(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching types data:", error);
+        setIsLoadingPokemons(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Error fetching data. Please try again later.");
         setIsLoadingTypes(false);
-        setError("Error fetching types data");
-      });
+        setIsLoadingPokemons(false);
+      }
+    };
+
+    fetchData();
   }, [selectedLanguage]);
 
-  const filteredPokemons = rows.filter((pokemon) =>
-  pokemon.names[selectedLanguage].toLowerCase().includes(searchTerm.toLowerCase())
-);
+  const handlePokemonClick = (pokemon) => {
+    setSelectedPokemon(pokemon);
+  };
 
-console.log('Filtered Pokemons:', filteredPokemons);
+  const filteredPokemons = rows.filter((pokemon) =>
+    pokemon.names[selectedLanguage].toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
@@ -58,12 +58,15 @@ console.log('Filtered Pokemons:', filteredPokemons);
             filteredPokemons={filteredPokemons}
             selectedLanguage={selectedLanguage}
             types={types}
+            onPokemonClick={handlePokemonClick}
           />
-          <PokemonDetails
-            filteredPokemons={filteredPokemons}
-            selectedLanguage={selectedLanguage}
-            types={types}
-          />
+          {selectedPokemon && (
+            <PokemonDetails
+              filteredPokemon={selectedPokemon}
+              selectedLanguage={selectedLanguage}
+              types={types}
+            />
+          )}
         </>
       )}
     </div>
