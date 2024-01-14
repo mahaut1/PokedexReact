@@ -18,7 +18,7 @@ function App() {
         <Header selectedLanguage={selectedLanguage} onLanguageChange={handleLanguageChange} />
         <Routes>
           <Route path="/" element={<PokemonListPage selectedLanguage={selectedLanguage} />} />
-          <Route path="/pokemon/:id" element={<PokemonDetails />} />
+          <Route path="/pokemon/:id" element={<PokemonDetails selectedLanguage={selectedLanguage} />} />
         </Routes>
       </div>
     </Router>

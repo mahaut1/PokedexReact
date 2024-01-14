@@ -1,7 +1,7 @@
 import React from 'react';
 import PokemonCard from '../PokemonCard/PokemonCard';
 
-const PokemonList = ({ selectedLanguage, filteredPokemons, types }) => {
+const PokemonList = ({ selectedLanguage, filteredPokemons, types, typesData }) => {
   if (!filteredPokemons.length) {
     return <div>No matching Pokemon found.</div>;
   }
@@ -14,10 +14,12 @@ const PokemonList = ({ selectedLanguage, filteredPokemons, types }) => {
           pokemon={pokemon}
           selectedLanguage={selectedLanguage}
           types={types}
+          typesData={typesData}
         />
       ))}
     </div>
   );
 };
+
 
 export default PokemonList;

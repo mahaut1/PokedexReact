@@ -17,11 +17,15 @@
     flex-direction: column;
     align-items: center;
   }
-  /* PokemonCard.css */
 
 .pokemon-type-button {
-  margin-right: 5px;
-  margin-bottom: 5px;
-  display: inline-block;
-  color: white;  /* Assurez-vous que la couleur du texte est définie */
+  text-transform: uppercase; 
+  border: none;
+  color: #FFF;
+  padding: 3px 7px;
+  cursor: pointer;
+  border-radius: 5px;
 }
+
+
+
